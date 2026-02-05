@@ -24,13 +24,15 @@ pipeline {
             }
         }
 
-        stage('Sonar Analysis') {
-            steps {
-                withSonarQubeEnv("${SONAR_SERVER}") {
-                    bat 'mvn clean verify sonar:sonar'
-                }
+      stage('Sonar Analysis') {
+    steps {
+        withSonarQubeEnv("${SONAR_SERVER}") {
+            withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                bat 'mvn clean verify sonar:sonar -Dsonar.login=%SONAR_TOKEN%'
             }
         }
+    }
+}
 
         stage('Quality Gate') {
             steps {
