@@ -14,8 +14,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/Premanand349/ci-demo.git',
-                    credentialsId: 'github-pat'
+                    url: 'https://github.com/Premanand349/ci-demo.git'
             }
         }
 
@@ -43,23 +42,17 @@ pipeline {
 
         stage('Deploy to Nexus') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'nexus-creds',
-                    usernameVariable: 'NEXUS_USER',
-                    passwordVariable: 'NEXUS_PASS'
-                )]) {
-                    bat 'mvn deploy'
-                }
+                bat 'mvn clean deploy'
             }
         }
     }
 
     post {
         success {
-            echo '✅ Pipeline completed successfully'
+            echo '✅ CI/CD Pipeline completed successfully'
         }
         failure {
-            echo '❌ Pipeline failed'
+            echo '❌ CI/CD Pipeline failed'
         }
     }
 }
